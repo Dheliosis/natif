@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,6 +30,7 @@ class AudioFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var mediaRecorder:MediaRecorder
+    private lateinit var mediaPlayer:MediaPlayer
     private var audioPath: String = ""
 
 
@@ -41,7 +43,9 @@ class AudioFragment : Fragment() {
         _binding = FragmentAudioBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        mediaRecorder = MediaRecorder(this.requireActivity().baseContext)
+        mediaRecorder = MediaRecorder(requireContext())
+        mediaPlayer = MediaPlayer()
+
 
         binding.startToggleB.isEnabled = false
 
@@ -51,14 +55,6 @@ class AudioFragment : Fragment() {
         }
 
         binding.startToggleB.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireActivity(),
-                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                val permissions = arrayOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                ActivityCompat.requestPermissions(requireActivity(), permissions,0)
-            }
-
             if(!isRecording) {
                 audioPath = requireActivity().getExternalFilesDir(null)?.absolutePath + "/my_audio.mp3"
                 mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -76,16 +72,23 @@ class AudioFragment : Fragment() {
 
                 binding.startToggleB.setImageResource(R.drawable.stop_button)
             } else {
-                mediaRecorder.stop()
+                try {
+                    mediaRecorder.stop()
+                    mediaRecorder.reset()
 
-                binding.startToggleB.setImageResource(R.drawable.voice_control)
+                    binding.startToggleB.setImageResource(R.drawable.voice_control)
+
+                    Toast.makeText(requireContext(), "Audio saved", Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    Log.e("Audio stop", e.message.toString())
+                }
+
             }
 
             isRecording = !isRecording
         }
 
         binding.playB.setOnClickListener {
-            val mediaPlayer = MediaPlayer()
             Log.d("audio folder",audioPath)
             try {
                 mediaPlayer.setDataSource(audioPath)

@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.camera
 
+import android.content.ContentValues
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,8 @@ import com.example.myapplication.databinding.FragmentCameraBinding
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.Toast
@@ -30,10 +33,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.OutputOptions
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.contentValuesOf
 import com.example.myapplication.R
 import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 
@@ -229,42 +234,38 @@ class CameraFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        val imageFolder = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"Images"
-        )
-
-        if(!imageFolder.exists()) {
-            imageFolder.mkdir()
+        val fileName = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date()) + ".jpg"
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Caro-image")
         }
 
-        val fileName = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            .format(System.currentTimeMillis()) + ".jpg"
 
-        val imageFile = File(imageFolder, fileName)
 
-        val outputOption = OutputFileOptions.Builder(imageFile).build()
+
+
+        val contentResolver = requireActivity().contentResolver
+
+
+        val outputOptions = ImageCapture.OutputFileOptions
+            .Builder(this.requireActivity().contentResolver,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues)
+            .build()
 
         imageCapture.takePicture(
-            outputOption,
-            ContextCompat.getMainExecutor(this.requireActivity().baseContext),
+            outputOptions,
+            ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val message = "Photo taken: ${outputFileResults.savedUri}"
-                    Toast.makeText(
-                        this@CameraFragment.requireActivity().baseContext,
-                        message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(context, "Photo saved: ${outputFileResults.savedUri}", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(
-                        this@CameraFragment.requireActivity().baseContext,
-                        exception.message.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Log.d("error take picture", exception.toString())
+                    Toast.makeText(context, "Error saving photo: ${exception.message}", Toast.LENGTH_SHORT).show()
                 }
-
             }
         )
     }
