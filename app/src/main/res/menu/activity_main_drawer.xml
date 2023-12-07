@@ -16,5 +16,9 @@
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_camera" />
+        <item
+            android:id="@+id/nav_audio"
+            android:icon="@drawable/baseline_mic_24"
+            android:title="@string/menu_audio" />
     </group>
 </menu>
