@@ -241,13 +241,6 @@ class CameraFragment : Fragment() {
             put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Caro-image")
         }
 
-
-
-
-
-        val contentResolver = requireActivity().contentResolver
-
-
         val outputOptions = ImageCapture.OutputFileOptions
             .Builder(this.requireActivity().contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
