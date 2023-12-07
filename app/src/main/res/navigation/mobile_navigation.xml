@@ -18,8 +18,14 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.myapplication.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_camera"
+        android:name="com.example.myapplication.ui.camera.CameraFragment"
+        android:label="@string/menu_camera"
+        tools:layout="@layout/fragment_camera" />
+
+    <fragment
+        android:id="@+id/nav_audio"
+        android:name="com.example.myapplication.ui.audio.AudioFragment"
+        android:label="@string/menu_audio"
+        tools:layout="@layout/fragment_audio" />
 </navigation>
