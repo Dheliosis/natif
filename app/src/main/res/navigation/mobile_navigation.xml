@@ -28,4 +28,10 @@
         android:name="com.example.myapplication.ui.audio.AudioFragment"
         android:label="@string/menu_audio"
         tools:layout="@layout/fragment_audio" />
+
+    <fragment
+        android:id="@+id/nav_data"
+        android:name="com.example.myapplication.ui.dataStorage.DataStorageFragment"
+        android:label="@string/menu_data"
+        tools:layout="@layout/fragment_data_storage" />
 </navigation>
