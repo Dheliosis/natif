@@ -25,7 +25,6 @@ class DataStorageFragment: Fragment() {
 
         sharedPreferences = requireActivity().getSharedPreferences("MySharedPrefs", Context.MODE_PRIVATE)
 
-        // Lors de l'ouverture de l'application, récupérer les données
         loadData()
 
         binding.saveButton.setOnClickListener {

@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.CancellationTokenSource
 import java.lang.Exception
 
-
 class LocationFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentLocationBinding? = null

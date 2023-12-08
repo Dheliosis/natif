@@ -1,41 +1,30 @@
 package com.example.myapplication.ui.camera
 
 import android.content.ContentValues
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentCameraBinding
 
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.Button
 import android.widget.Toast
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
-import androidx.camera.core.CameraProvider
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCapture.OutputFileOptions
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.OutputOptions
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.contentValuesOf
 import com.example.myapplication.R
-import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -54,10 +43,6 @@ class CameraFragment : Fragment() {
     private val multiplePermissionNameList =
         arrayListOf(
             android.Manifest.permission.CAMERA,
-
-            //android.Manifest.permission.READ_MEDIA_AUDIO,
-            //android.Manifest.permission.READ_MEDIA_VIDEO,
-            //android.Manifest.permission.READ_MEDIA_IMAGES
         )
 
     private lateinit var imageCapture: ImageCapture
@@ -267,10 +252,10 @@ class CameraFragment : Fragment() {
         if(camera.cameraInfo.hasFlashUnit()) {
             if(camera.cameraInfo.torchState.value == 0) {
                 camera.cameraControl.enableTorch(true)
-                binding.flachToggleB.setImageResource(R.drawable.baseline_flash_off_24)
+                binding.flachToggleB.setImageResource(R.drawable.baseline_flash_on_24)
             } else {
                 camera.cameraControl.enableTorch(false)
-                binding.flachToggleB.setImageResource(R.drawable.baseline_flash_on_24)
+                binding.flachToggleB.setImageResource(R.drawable.baseline_flash_off_24)
             }
         } else {
             Toast.makeText(
