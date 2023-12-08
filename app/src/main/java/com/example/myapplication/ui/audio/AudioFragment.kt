@@ -5,23 +5,16 @@ import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentAudioBinding
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class AudioFragment : Fragment() {
@@ -49,6 +42,7 @@ class AudioFragment : Fragment() {
 
         binding.startToggleB.isEnabled = false
 
+        ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 111)
         if (ActivityCompat.checkSelfPermission(this.requireActivity().baseContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 111)
             binding.startToggleB.isEnabled =  true
@@ -91,11 +85,14 @@ class AudioFragment : Fragment() {
         binding.playB.setOnClickListener {
             Log.d("audio folder",audioPath)
             try {
+                mediaPlayer.reset()
                 mediaPlayer.setDataSource(audioPath)
-                mediaPlayer.prepare()
-                mediaPlayer.start()
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    mediaPlayer.start()
+                }
             } catch (e: IOException) {
-                Log.e("AudioPlayTest", "prepare() failed")
+                Log.e("AudioPlayTest", "prepare() failed ${e.message}")
             }
 
         }
@@ -112,6 +109,7 @@ class AudioFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        mediaPlayer.release()
         super.onDestroyView()
         _binding = null
     }

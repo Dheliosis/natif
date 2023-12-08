@@ -20,5 +20,9 @@
             android:id="@+id/nav_audio"
             android:icon="@drawable/baseline_mic_24"
             android:title="@string/menu_audio" />
+        <item
+            android:id="@+id/nav_data"
+            android:icon="@drawable/baseline_data_object_24"
+            android:title="@string/menu_data" />
     </group>
 </menu>
